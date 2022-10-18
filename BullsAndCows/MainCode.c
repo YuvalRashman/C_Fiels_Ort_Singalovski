@@ -10,7 +10,9 @@
 
 unsigned int getBulls(int num, int guess);
 BOOL isNumberValid(unsigned int num);
+BOOL isNumberHaveRightAmountOfDigits(unsigned int num);
 unsigned int getValidNumberFromPlayer(int num, short player);
+unsigned int getValidGuessFromPlayer(int num, short player);
 
 //--------------------------------------------------------------------------------------------------------------------
 //                                                     Bulls & Cows
@@ -51,7 +53,7 @@ void main() {
 
 	printf("player 1 enter your guess: ");
 	scanf("%d", &nGuess);
-	nGuess = getValidNumberFromPlayer(nGuess, 1);
+	nGuess = getValidGuessFromPlayer(nGuess, 1);
 
 	while ((nGuess - nPlayerNumbers[!CURRENT_PLAYER_TO_INDEX(nCurrentPlayer)])) //this loop end when player guess other player number
 	{
@@ -63,7 +65,7 @@ void main() {
 		nCurrentPlayer = CURRENT_PLAYER(nLoops);
 		printf("player %d enter your guess: ", nCurrentPlayer);
 		scanf("%d", &nGuess);
-		nGuess = getValidNumberFromPlayer(nGuess, nCurrentPlayer);
+		nGuess = getValidGuessFromPlayer(nGuess, nCurrentPlayer);
 	}
 	printf("player %d won in %d turns", nCurrentPlayer, LOOPS_TO_TURNS(nLoops));
 }
@@ -94,18 +96,81 @@ unsigned int getBulls(int nNumber, int nGuess) {
 	return nBulls;
 }
 
-// need to wrirte comments
-BOOL isNumberValid(unsigned int num) {
+//--------------------------------------------------------------------------------------------------------------------
+//                                                         isNumberHaveRightAmountOfDigits
+//                                                         -------------------------------
+//
+// General : The function check if number have valid amount of digit acourding to game rules.
+//
+// Parameters :
+// num - number to guess (In)
+//
+// Return Value : 0 or 1 that represent if the number has right amount of digits.
+//
+//--------------------------------------------------------------------------------------------------------------------
+BOOL isNumberHaveRightAmountOfDigits(unsigned int num) {
 	// Code section
-	return (!(countDigits(num) - MAX_VALID_DIGITS) * !isDigitsRepeatInNumber(num));
+	return(!(countDigits(num) - MAX_VALID_DIGITS));
 }
 
-// need to wrirte comments
+//--------------------------------------------------------------------------------------------------------------------
+//                                                         isNumberValid
+//                                                         -------------
+//
+// General : The function check if number is valid acourding to games rules.
+//
+// Parameters :
+// num - number to guess (In)
+//
+// Return Value : 0 or 1 that represent if the number is valid.
+//
+//--------------------------------------------------------------------------------------------------------------------
+BOOL isNumberValid(unsigned int num) {
+	// Code section
+	return (isNumberHaveRightAmountOfDigits(num) * !isDigitsRepeatInNumber(num));
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+//                                                         getValidNumberFromPlayer
+//                                                         ------------------------
+//
+// General : The function return a valid number acourding to games rules.
+//
+// Parameters :
+// num - number to guess (In)
+// player - number of player (In)
+//
+// Return Value : valid number acourding to games ruels.
+//
+//--------------------------------------------------------------------------------------------------------------------
 unsigned int getValidNumberFromPlayer(int num, short player) {
 	// Code section
 	while (!(isNumberValid(num)))
 	{
 		printf(" *Not Valid Number!!!\n *player %d enter number again: ", player);
+		scanf("%d", &num);
+	}
+	return num;
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+//                                                         getValidGuessFromPlayer
+//                                                         ----------------------
+//
+// General : The function return a valid guess acourding to games rules.
+//
+// Parameters :
+// num - number to guess (In)
+// player - number of player (In)
+//
+// Return Value : valid guess acourding to games ruels.
+//
+//--------------------------------------------------------------------------------------------------------------------
+unsigned int getValidGuessFromPlayer(int num, short player) {
+	// Code section
+	while (!(isNumberHaveRightAmountOfDigits(num)))
+	{
+		printf(" *Not Valid Number!!!\n *player %d enter guess again: ", player);
 		scanf("%d", &num);
 	}
 	return num;
